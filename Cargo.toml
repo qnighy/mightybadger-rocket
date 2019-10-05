@@ -14,7 +14,7 @@ license = "MIT"
 
 [dependencies]
 rocket = { version = ">=0.4.0, <=0.5.0-dev", default-features = false }
-mightybadger = { path = ".." }
+mightybadger = { git = "https://github.com/qnighy/mightybadger-rs.git", rev = "fe19ce7" }
 
 [dev-dependencies]
 rocket = { version = ">=0.4.0, <=0.5.0-dev", default-features = true }
