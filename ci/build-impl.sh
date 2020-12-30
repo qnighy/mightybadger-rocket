@@ -12,7 +12,3 @@ cargo build --examples --verbose
 cargo test --verbose
 
 cp Cargo.toml.bak Cargo.toml
-
-if rustfmt -V >/dev/null; then
-  cargo fmt --all -- --check
-fi
