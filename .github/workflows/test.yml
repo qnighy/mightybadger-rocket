@@ -8,10 +8,10 @@ jobs:
 
     strategy:
       matrix:
-        rust: [nightly]
+        rust: [stable, beta, nightly, "1.47.0"]
         minver: [false]
         include:
-        - rust: nightly
+        - rust: stable
           minver: true
 
     steps:
@@ -27,7 +27,6 @@ jobs:
         MINVER: ${{ matrix.minver }}
     - name: Check format
       run: |
-        if rustup component add rustfmt; then
-          cargo fmt --all -- --check
-        fi
-      if: matrix.rust == 'nightly'
+        rustup component add rustfmt
+        cargo fmt --all -- --check
+      if: matrix.rust == 'stable'

@@ -1,3 +1,4 @@
+use async_trait::async_trait;
 use mightybadger::payload::RequestInfo;
 use rocket::fairing::{Fairing, Info, Kind};
 use rocket::{Data, Request, Response};
@@ -11,6 +12,7 @@ impl HoneybadgerHook {
     }
 }
 
+#[async_trait]
 impl Fairing for HoneybadgerHook {
     fn info(&self) -> Info {
         Info {
@@ -19,7 +21,7 @@ impl Fairing for HoneybadgerHook {
         }
     }
 
-    fn on_request(&self, request: &mut Request<'_>, _data: &Data) {
+    async fn on_request(&self, request: &mut Request<'_>, _data: &mut Data) {
         let mut cgi_data = HashMap::new();
         if let Some(remote_addr) = request.remote() {
             cgi_data.insert("REMOTE_ADDR".to_string(), remote_addr.ip().to_string());
@@ -32,7 +34,7 @@ impl Fairing for HoneybadgerHook {
         for header in request.headers().iter() {
             let name = "HTTP_"
                 .chars()
-                .chain(header.name().chars())
+                .chain(header.name().as_str().chars())
                 .map(|ch| {
                     if ch == '-' {
                         '_'
@@ -53,7 +55,7 @@ impl Fairing for HoneybadgerHook {
         mightybadger::context::set(request_info);
     }
 
-    fn on_response(&self, _request: &Request<'_>, _response: &mut Response<'_>) {
+    async fn on_response<'r>(&self, _request: &'r Request<'_>, _response: &mut Response<'r>) {
         mightybadger::context::unset();
     }
 }
