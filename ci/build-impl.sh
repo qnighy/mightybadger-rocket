@@ -5,7 +5,7 @@ set -o pipefail
 rm -f Cargo.lock
 
 if [[ ${MINVER:-false} = true ]]; then
-  sed -e '/^\[dependencies\]$/,/^[.*]$/s/"\([0-9]\)/"=\1/g' < Cargo.toml.bak > Cargo.toml
+  sed -e '/^\[dependencies\]$/,/^[.*]$/s/"\([0-9]\+\.\)/"=\1/g' < Cargo.toml.bak > Cargo.toml
 fi
 
 cargo build --examples --verbose

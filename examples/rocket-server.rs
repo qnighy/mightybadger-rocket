@@ -1,5 +1,4 @@
-#![feature(proc_macro_hygiene, decl_macro)]
-
+use rocket::error::Error;
 use rocket::{get, routes};
 
 #[get("/")]
@@ -17,10 +16,13 @@ fn error() -> &'static str {
     panic!("/error is requested");
 }
 
-fn main() {
+#[tokio::main]
+async fn main() -> Result<(), Error> {
     mightybadger::setup();
     rocket::ignite()
         .mount("/", routes![index, ping, error])
         .attach(mightybadger_rocket::HoneybadgerHook::new())
-        .launch();
+        .launch()
+        .await?;
+    Ok(())
 }
